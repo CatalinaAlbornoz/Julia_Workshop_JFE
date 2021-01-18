@@ -4,8 +4,8 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 63b9e832-3b3b-11eb-0d45-b54bff3a4c10
-using Pkg; Pkg.activate("."); using Plots
+# ╔═╡ 9e86bf6e-596b-11eb-2c77-73ec9fed651b
+using Plots
 
 # ╔═╡ a79e42e0-3a31-11eb-3791-2dde6b25172b
 md"
@@ -83,6 +83,12 @@ md"
 Para realizar las gráficas se utilizará el paquete Plots, por lo tanto el paquete debe ser importado:
 "
 
+# ╔═╡ 8768bb08-596a-11eb-2e68-cfa995caf73b
+
+
+# ╔═╡ 9b5c9954-596a-11eb-2338-13b8c2b3c90a
+
+
 # ╔═╡ 16040e00-539c-11eb-0f12-db5ae4d9970f
 Plots.default(size = (650,450))
 
@@ -97,7 +103,7 @@ Gráfico de números complejos:
 begin
 	r = 2	
 	zcomplejo = [r*cos(θ)+r*sin(θ)*im for θ in 0:0.3:2*pi]
-	scatter(zcomplejo, seriescolor=:white,
+	Plots.scatter(zcomplejo, seriescolor=:white,
 		    markerstrokecolor=:blue,
 		    aspectratio=1,
 		    title="Gráfica de ejemplo")
@@ -181,7 +187,12 @@ md"
  Representa un objeto grilla 
 """
 struct Grid{T<:Real}
-	
+	real_min::Real
+	real_max::Real
+	im_min::Real
+	im_max::Real
+	real_step::Real
+	im_step::Real
 end
 
 # ╔═╡ f1207c62-4631-11eb-30cb-691cbcca8574
@@ -195,7 +206,10 @@ md"
 Crear una matriz de rangos [rango_abcisas,rango_ordenadas]
 """
 function makeGrid(g::Grid)
-	
+	x = g.real_min:g.step_im:g.real_max
+	y = g.im_min:g.step_im:g.im_max
+	zcomplejo = [real + imaginario * im for real in x, imaginario in y]
+	return(zcomplejo)
 end
 
 # ╔═╡ 774af954-4635-11eb-31dd-17a273bf9b15
@@ -204,8 +218,13 @@ md"
 "
 
 # ╔═╡ acda722e-4636-11eb-0a76-29912beacb1c
-begin #*
-	
+begin
+	f₀(z,c) = z^2 + c 
+	f₁(z,c) = sin(z) + z^2 + c
+	f₂(z,c) = z^z + z^6 + c
+	f₃(z,c) = z^z + z^5 + c
+	f₄(z,c) = z^5 + c
+	f₆(z,c) = z^3 + c
 end
 
 # ╔═╡ 36bed290-4633-11eb-26fe-d15d7d6f03f8
@@ -219,7 +238,11 @@ md"
 Comprobar el criterio de convergencia para los conjuntos de Julia y Mandelbrot
 """
 function testJM(z::Complex)
-	
+	if abs(z) < 2.0
+		return true
+	else
+		return false
+	end
 end
 
 # ╔═╡ 5466484a-4637-11eb-115f-ab417bd2b802
@@ -233,7 +256,11 @@ md"
 Comprobar el criterio de convergencia para los conjuntos de Julia y Mandelbrot
 """
 function testbiomorph(z::Complex,τ::Real)
-	
+	if real(z) > τ || imag(z) > τ
+		return true
+	else
+		return false
+	end
 end
 
 # ╔═╡ 71f98b8a-4641-11eb-2c9c-7f49f8577365
@@ -448,7 +475,9 @@ md"
 # ╔═╡ Cell order:
 # ╟─a79e42e0-3a31-11eb-3791-2dde6b25172b
 # ╟─231273f6-3b3b-11eb-2b3b-2308e244a358
-# ╠═63b9e832-3b3b-11eb-0d45-b54bff3a4c10
+# ╟─8768bb08-596a-11eb-2e68-cfa995caf73b
+# ╟─9b5c9954-596a-11eb-2338-13b8c2b3c90a
+# ╠═9e86bf6e-596b-11eb-2c77-73ec9fed651b
 # ╠═16040e00-539c-11eb-0f12-db5ae4d9970f
 # ╟─cd1023fa-3b3b-11eb-22ec-2724be9b2af8
 # ╠═4070b426-3b3d-11eb-1ef2-73f2f10c9ce6
